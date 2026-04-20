@@ -163,34 +163,34 @@ HCURSOR CMFCGRIDDlg::OnQueryDragIcon()
 }
 
 
-
+//=======만들기 버튼 누를 때======
 void CMFCGRIDDlg::OnBnClickedCreate()
 {
 	UpdateData(TRUE);
 
-	int nInputHeight = GetDlgItemInt(IDC_HEIGHT);
-	int nInputWidth = GetDlgItemInt(IDC_WIDTH);
+	int nInputHeight = GetDlgItemInt(IDC_HEIGHT);	//해당 에디트 박스에 적힌 int 가져오기
+	int nInputWidth = GetDlgItemInt(IDC_WIDTH);		
 
 	if (nInputHeight > 20 || nInputWidth > 20) {
-		AfxMessageBox(_T("최대 크기는 20*20 입니다."), (MB_OK | MB_ICONEXCLAMATION));
+		AfxMessageBox(_T("최대 크기는 20*20 입니다."), (MB_OK | MB_ICONEXCLAMATION));	//메세지 박스 OK 버튼만 아이콘은 세모에 느낌표
 		if (IDOK) {
 			return;
 		}
 	}
 
-	m_ctrlGrid.SetRowCount(nInputHeight);
-	m_ctrlGrid.SetColumnCount(nInputWidth);
-	for (int col=0; col < nInputWidth; col++) {
-		m_ctrlGrid.SetColumnWidth(col,40 );
+	m_ctrlGrid.SetRowCount(nInputHeight);	//행(가로)의 크기 설정
+	m_ctrlGrid.SetColumnCount(nInputWidth);	//열(세로)의 크기 설정
+	for (int col = 0; col < nInputWidth; col++) {	//반복해라 작성한만큼
+		m_ctrlGrid.SetColumnWidth(col,40);	//40*40 크기로 행을 갯수만큼 생성
 	}
-	for (int row=0; row < nInputHeight; row++) {
+	for (int row=0; row < nInputHeight; row++) {	
 		m_ctrlGrid.SetRowHeight(row, 40);
 	}
 
 	UpdateData(FALSE);
 }
 
-
+//=======난수 버튼 누를 때======
 void CMFCGRIDDlg::OnBnClickedRandom()
 {
 	UpdateData(TRUE);
@@ -198,27 +198,26 @@ void CMFCGRIDDlg::OnBnClickedRandom()
 	int nInputWidth = GetDlgItemInt(IDC_WIDTH);
 	for (int col = 0; col < nInputWidth; col++) {
 		for (int row = 0; row < nInputHeight; row++) {
-			int x = rand() % 256;
-			m_ctrlGrid.SetItemTextFmt(row, col, _T("% d"), x);
+			int x = rand() % 256;	//랜덤 함수 0~255까지 
+			m_ctrlGrid.SetItemTextFmt(row, col, _T("% d"), x);	//랜덤 함수를 칸에 작성하는 것을 행열만큼 반복
 		}
 	}
 	m_ctrlGrid.Invalidate();	//그리드 화면 새로 고침 필수
 	UpdateData(FALSE);
 }
 
-
+//=======더하기 버튼 누를 때======
 void CMFCGRIDDlg::OnBnClickedAdd()
 {
 	int nInputHeight = GetDlgItemInt(IDC_HEIGHT);
 	int nInputWidth = GetDlgItemInt(IDC_WIDTH);
 
-	std::vector<std::vector<int>> arr2D(nInputHeight, std::vector<int>(nInputWidth, 0));
+	std::vector<std::vector<int>> arr2D(nInputHeight, std::vector<int>(nInputWidth, 0));	//백터를 사용해서 배열 작성
 	for (int row = 0; row < nInputHeight; row++) {
 		for (int col = 0; col < nInputWidth; col++) {
-			CString strText=m_ctrlGrid.GetItemText(row, col);
-			arr2D[row][col] = _ttoi(strText);
-			TRACE(_T("arr2D[%d][%d]의 값: %d\n"),row,col, arr2D[row][col]);
+			CString strText=m_ctrlGrid.GetItemText(row, col);	//텍스트를 뽑아와라
+			arr2D[row][col] = _ttoi(strText);	//text to int 해서 저장
+			TRACE(_T("arr2D[%d][%d]의 값: %d\n"),row,col, arr2D[row][col]);	//확인을 위한 것 추후 제거 요망
 		}
 	}
-	
 }

@@ -12,6 +12,8 @@
 #define IDC_HEIGHT                      1002
 #define IDC_CREATE                      1003
 #define IDC_RANDOM                      1004
+#define IDC_CREATE2                     1005
+#define IDC_ADD                         1005
 
 // Next default values for new objects
 // 

@@ -39,4 +39,5 @@ public:
 	CString m_nHeight;
 	CEdit m_nWidth;
 	afx_msg void OnBnClickedRandom();
+	afx_msg void OnBnClickedAdd();
 };

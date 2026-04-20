@@ -73,6 +73,7 @@ BEGIN_MESSAGE_MAP(CMFCGRIDDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_CREATE, &CMFCGRIDDlg::OnBnClickedCreate)
 	ON_BN_CLICKED(IDC_RANDOM, &CMFCGRIDDlg::OnBnClickedRandom)
+	ON_BN_CLICKED(IDC_ADD, &CMFCGRIDDlg::OnBnClickedAdd)
 END_MESSAGE_MAP()
 
 
@@ -203,4 +204,21 @@ void CMFCGRIDDlg::OnBnClickedRandom()
 	}
 	m_ctrlGrid.Invalidate();	//그리드 화면 새로 고침 필수
 	UpdateData(FALSE);
+}
+
+
+void CMFCGRIDDlg::OnBnClickedAdd()
+{
+	int nInputHeight = GetDlgItemInt(IDC_HEIGHT);
+	int nInputWidth = GetDlgItemInt(IDC_WIDTH);
+
+	std::vector<std::vector<int>> arr2D(nInputHeight, std::vector<int>(nInputWidth, 0));
+	for (int row = 0; row < nInputHeight; row++) {
+		for (int col = 0; col < nInputWidth; col++) {
+			CString strText=m_ctrlGrid.GetItemText(row, col);
+			arr2D[row][col] = _ttoi(strText);
+			TRACE(_T("arr2D[%d][%d]의 값: %d\n"),row,col, arr2D[row][col]);
+		}
+	}
+	
 }

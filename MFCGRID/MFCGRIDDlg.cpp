@@ -167,7 +167,7 @@ HCURSOR CMFCGRIDDlg::OnQueryDragIcon()
 void CMFCGRIDDlg::OnBnClickedCreate()
 {
 	UpdateData(TRUE);
-
+	m_ctrlGrid.DeleteAllItems();	//기존 적혀 있던 숫자들 삭제
 	int nInputHeight = GetDlgItemInt(IDC_HEIGHT);	//해당 에디트 박스에 적힌 int 가져오기
 	int nInputWidth = GetDlgItemInt(IDC_WIDTH);		
 
@@ -199,7 +199,9 @@ void CMFCGRIDDlg::OnBnClickedRandom()
 	for (int col = 0; col < nInputWidth; col++) {
 		for (int row = 0; row < nInputHeight; row++) {
 			int x = rand() % 256;	//랜덤 함수 0~255까지 
+			//COLORREF randomGray = RGB(x, x, x);	//흑백으로 변경
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("% d"), x);	//랜덤 함수를 칸에 작성하는 것을 행열만큼 반복
+			//m_ctrlGrid.SetItemBkColour(row, col, randomGray);		//값을 흑백으로 색상 칠하기
 		}
 	}
 	m_ctrlGrid.Invalidate();	//그리드 화면 새로 고침 필수
@@ -212,7 +214,7 @@ void CMFCGRIDDlg::OnBnClickedAdd()
 	int nInputHeight = GetDlgItemInt(IDC_HEIGHT);
 	int nInputWidth = GetDlgItemInt(IDC_WIDTH);
 
-	std::vector<std::vector<int>> arr2D(nInputHeight, std::vector<int>(nInputWidth, 0));	//백터를 사용해서 배열 작성
+	std::vector<std::vector<int>> arr2D(nInputHeight, std::vector<int>(nInputWidth, 0));	//백터를 사용해서 배열 작성	/가로줄 만들고 가로줄을 반복해서 배열 생성   vector<std::vector<int>>: .int vecter를 담겠다 -> int 1 차원 배열 여러개 = 2차원
 	for (int row = 0; row < nInputHeight; row++) {
 		for (int col = 0; col < nInputWidth; col++) {
 			CString strText=m_ctrlGrid.GetItemText(row, col);	//텍스트를 뽑아와라

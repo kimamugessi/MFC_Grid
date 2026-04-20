@@ -168,6 +168,7 @@ void CMFCGRIDDlg::OnBnClickedCreate()
 {
 	UpdateData(TRUE);
 	m_ctrlGrid.DeleteAllItems();	//기존 적혀 있던 숫자들 삭제
+	m_ctrlGrid.SetEditable(FALSE);
 	int nInputHeight = GetDlgItemInt(IDC_HEIGHT);	//해당 에디트 박스에 적힌 int 가져오기
 	int nInputWidth = GetDlgItemInt(IDC_WIDTH);		
 
@@ -177,9 +178,12 @@ void CMFCGRIDDlg::OnBnClickedCreate()
 			return;
 		}
 	}
-
+	int nx = nInputWidth *40;
+	int ny = nInputHeight * 40;
+	m_ctrlGrid.MoveWindow(0, 0, nx,ny);
 	m_ctrlGrid.SetRowCount(nInputHeight);	//행(가로)의 크기 설정
 	m_ctrlGrid.SetColumnCount(nInputWidth);	//열(세로)의 크기 설정
+	
 	for (int col = 0; col < nInputWidth; col++) {	//반복해라 작성한만큼
 		m_ctrlGrid.SetColumnWidth(col,40);	//40*40 크기로 행을 갯수만큼 생성
 	}

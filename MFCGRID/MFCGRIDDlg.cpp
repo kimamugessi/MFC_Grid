@@ -169,16 +169,21 @@ void CMFCGRIDDlg::OnBnClickedCreate()
 
 	int nInputHeight = GetDlgItemInt(IDC_HEIGHT);
 	int nInputWidth = GetDlgItemInt(IDC_WIDTH);
-	if (nInputHeight < 0 || nInputWidth < 0)
-		return;
+
+	if (nInputHeight > 20 || nInputWidth > 20) {
+		AfxMessageBox(_T("최대 크기는 20*20 입니다."), (MB_OK | MB_ICONEXCLAMATION));
+		if (IDOK) {
+			return;
+		}
+	}
 
 	m_ctrlGrid.SetRowCount(nInputHeight);
 	m_ctrlGrid.SetColumnCount(nInputWidth);
 	for (int col=0; col < nInputWidth; col++) {
-		m_ctrlGrid.SetColumnWidth(col,50 );
+		m_ctrlGrid.SetColumnWidth(col,40 );
 	}
 	for (int row=0; row < nInputHeight; row++) {
-		m_ctrlGrid.SetRowHeight(row, 50);
+		m_ctrlGrid.SetRowHeight(row, 40);
 	}
 
 	UpdateData(FALSE);

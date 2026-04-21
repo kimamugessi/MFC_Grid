@@ -76,6 +76,7 @@ BEGIN_MESSAGE_MAP(CMFCGRIDDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_ADD, &CMFCGRIDDlg::OnBnClickedAdd)
 	ON_BN_CLICKED(IDC_HORIZ, &CMFCGRIDDlg::OnBnClickedHoriz)
 	ON_BN_CLICKED(IDC_VERTI, &CMFCGRIDDlg::OnBnClickedVerti)
+	ON_BN_CLICKED(IDC_FLIP, &CMFCGRIDDlg::OnBnClickedFlip)
 END_MESSAGE_MAP()
 
 
@@ -240,7 +241,7 @@ void CMFCGRIDDlg::OnBnClickedHoriz()
 
 	for (int row = 0; row < nInputHeight; row++) {
 		for (int col = 0; col < nInputWidth; col++) {
-			int x = m_arr2D[row][nInputWidth-1-col];	//배열의 열을 거꾸로 만들기(입력값은 3일 떄 0 1 2로 형성되기에 -1을 해줌)
+			int x = m_arr2D[nInputHeight - 1 - row][col];	//배열의 행을 거꾸로 만들기(입력값은 3일 떄 0 1 2로 형성되기에 -1을 해줌)	
 			//COLORREF Gray = RGB(x, x, x);	//흑백으로 변경
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("% d"), x);	// 작성하는 것을 행열만큼 반복
 			//m_ctrlGrid.SetItemBkColour(row, col, Gray);		//값을 흑백으로 색상 칠하기
@@ -257,10 +258,9 @@ void CMFCGRIDDlg::OnBnClickedVerti()
 	int nInputHeight = GetDlgItemInt(IDC_HEIGHT);
 	int nInputWidth = GetDlgItemInt(IDC_WIDTH);
 	OnBnClickedAdd();//배열을 활용해서 하기 위한 배열 형성 코드(중요)
-	
 	for (int row = 0; row < nInputHeight; row++) {
 		for (int col = 0; col < nInputWidth; col++) {
-			int x = m_arr2D[nInputHeight - 1 - row][col];	//배열의 열을 거꾸로 만들기(입력값은 3일 떄 0 1 2로 형성되기에 -1을 해줌 
+			int x = m_arr2D[row][nInputWidth - 1 - col];	//배열의 열을 거꾸로 만들기(입력값은 3일 떄 0 1 2로 형성되기에 -1을 해줌)
 			//COLORREF Gray = RGB(x, x, x);	//흑백으로 변경
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("% d"), x);	// 작성하는 것을 행열만큼 반복
 			//m_ctrlGrid.SetItemBkColour(row, col, Gray);		//값을 흑백으로 색상 칠하기
@@ -269,3 +269,22 @@ void CMFCGRIDDlg::OnBnClickedVerti()
 	m_ctrlGrid.Invalidate();	//그리드 화면 새로 고침 필수
 	UpdateData(FALSE);
 } 
+
+
+void CMFCGRIDDlg::OnBnClickedFlip()
+{
+	UpdateData(TRUE);
+	int nInputHeight = GetDlgItemInt(IDC_HEIGHT);
+	int nInputWidth = GetDlgItemInt(IDC_WIDTH);
+	OnBnClickedAdd();//배열을 활용해서 하기 위한 배열 형성 코드(중요)
+	for (int row = 0; row < nInputHeight; row++) {
+		for (int col = 0; col < nInputWidth; col++) {
+			int x = m_arr2D[col][nInputHeight-1-row];	//배열의 뒤집어 기(입력값은 3일 떄 0 1 2로 형성되기에 -1을 해줌)
+			//COLORREF Gray = RGB(x, x, x);	//흑백으로 변경
+			m_ctrlGrid.SetItemTextFmt(row, col, _T("% d"), x);	// 작성하는 것을 행열만큼 반복
+			//m_ctrlGrid.SetItemBkColour(row, col, Gray);		//값을 흑백으로 색상 칠하기
+		}
+	}
+	m_ctrlGrid.Invalidate();	//그리드 화면 새로 고침 필수
+	UpdateData(FALSE);
+}

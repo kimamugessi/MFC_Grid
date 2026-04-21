@@ -45,4 +45,5 @@ public:
 	afx_msg void OnBnClickedAdd();
 	afx_msg void OnBnClickedHoriz();
 	afx_msg void OnBnClickedVerti();
+	afx_msg void OnBnClickedFlip();
 };

@@ -17,6 +17,8 @@
 #define IDC_                            1006
 #define IDC_HORIZ                       1006
 #define IDC_VERTI                       1007
+#define IDC_HORIZ2                      1008
+#define IDC_FLIP                        1008
 
 // Next default values for new objects
 // 

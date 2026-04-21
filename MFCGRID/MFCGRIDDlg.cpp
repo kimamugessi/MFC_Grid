@@ -111,7 +111,7 @@ BOOL CMFCGRIDDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
-	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	MoveWindow(0, 0, 1280, 850);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -220,7 +220,7 @@ void CMFCGRIDDlg::OnBnClickedAdd()
 {
 	int nInputHeight = GetDlgItemInt(IDC_HEIGHT);
 	int nInputWidth = GetDlgItemInt(IDC_WIDTH);
-
+	
 	m_arr2D.assign(nInputHeight, std::vector<int>(nInputWidth, 0));
 	for (int row = 0; row < nInputHeight; row++) {
 		for (int col = 0; col < nInputWidth; col++) {
@@ -258,6 +258,7 @@ void CMFCGRIDDlg::OnBnClickedVerti()
 	int nInputHeight = GetDlgItemInt(IDC_HEIGHT);
 	int nInputWidth = GetDlgItemInt(IDC_WIDTH);
 	OnBnClickedAdd();//배열을 활용해서 하기 위한 배열 형성 코드(중요)
+
 	for (int row = 0; row < nInputHeight; row++) {
 		for (int col = 0; col < nInputWidth; col++) {
 			int x = m_arr2D[row][nInputWidth - 1 - col];	//배열의 열을 거꾸로 만들기(입력값은 3일 떄 0 1 2로 형성되기에 -1을 해줌)
@@ -270,21 +271,31 @@ void CMFCGRIDDlg::OnBnClickedVerti()
 	UpdateData(FALSE);
 } 
 
-
 void CMFCGRIDDlg::OnBnClickedFlip()
-{
-	UpdateData(TRUE);
-	int nInputHeight = GetDlgItemInt(IDC_HEIGHT);
-	int nInputWidth = GetDlgItemInt(IDC_WIDTH);
-	OnBnClickedAdd();//배열을 활용해서 하기 위한 배열 형성 코드(중요)
-	for (int row = 0; row < nInputHeight; row++) {
-		for (int col = 0; col < nInputWidth; col++) {
-			int x = m_arr2D[col][nInputHeight-1-row];	//배열의 뒤집어 기(입력값은 3일 떄 0 1 2로 형성되기에 -1을 해줌)
-			//COLORREF Gray = RGB(x, x, x);	//흑백으로 변경
-			m_ctrlGrid.SetItemTextFmt(row, col, _T("% d"), x);	// 작성하는 것을 행열만큼 반복
-			//m_ctrlGrid.SetItemBkColour(row, col, Gray);		//값을 흑백으로 색상 칠하기
+{	
+	OnBnClickedAdd();
+	if (m_arr2D.empty()) return;
+	int nInputHeight = m_arr2D.size();	//원본 행 크기
+	int nInputWidth = m_arr2D[0].size();	//원본 열 크기
+
+	int nx = nInputHeight * 40 + 4;		//90도 회전했기에 앞으로는 가로(Width)가 원본 Height
+	int ny = nInputWidth * 40 + 4;								 //세로(Height)가 원본 Width
+	m_ctrlGrid.MoveWindow(0, 0, nx, ny);
+	m_ctrlGrid.SetRowCount(nInputWidth);
+	m_ctrlGrid.SetColumnCount(nInputHeight);	
+	for (int col = 0; col < nInputHeight; col++) {
+		m_ctrlGrid.SetColumnWidth(col, 40);
+	}
+	for (int row = 0; row < nInputWidth; row++) {
+		m_ctrlGrid.SetRowHeight(row, 40);
+	}
+
+	for (int row = 0; row < nInputWidth; row++) {
+		for (int col = 0; col < nInputHeight; col++) {
+			m_ctrlGrid.SetItemTextFmt(row, col, _T("%d"), m_arr2D[nInputHeight - 1 - col][row]);
 		}
 	}
-	m_ctrlGrid.Invalidate();	//그리드 화면 새로 고침 필수
-	UpdateData(FALSE);
+	SetDlgItemInt(IDC_HEIGHT, nInputWidth);	//동기화를 시켜야함!! 그래야 다시 버튼을 누를 때 편하하고 가독성도 좋음 
+	SetDlgItemInt(IDC_WIDTH, nInputHeight);
+	m_ctrlGrid.Invalidate();
 }

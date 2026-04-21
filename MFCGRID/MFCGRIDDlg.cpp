@@ -111,7 +111,7 @@ BOOL CMFCGRIDDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
-	MoveWindow(0, 0, 1280, 850);
+	MoveWindow(0, 0, 1280, 956);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -181,17 +181,17 @@ void CMFCGRIDDlg::OnBnClickedCreate()
 			return;
 		}
 	}
-	int nx = nInputWidth * 40+4;
-	int ny = nInputHeight * 40+4;
+	int nx = nInputWidth * 45+4;
+	int ny = nInputHeight * 45+4;
 	m_ctrlGrid.MoveWindow(0, 0, nx,ny);
 	m_ctrlGrid.SetRowCount(nInputHeight);	//행(가로)의 크기 설정
 	m_ctrlGrid.SetColumnCount(nInputWidth);	//열(세로)의 크기 설정
 	
 	for (int col = 0; col < nInputWidth; col++) {	//반복해라 작성한만큼
-		m_ctrlGrid.SetColumnWidth(col,40);	//40*40 크기로 행을 갯수만큼 생성
+		m_ctrlGrid.SetColumnWidth(col,45);	//45*45 크기로 행을 갯수만큼 생성
 	}
 	for (int row=0; row < nInputHeight; row++) {	
-		m_ctrlGrid.SetRowHeight(row, 40);
+		m_ctrlGrid.SetRowHeight(row, 45);
 	}
 
 	UpdateData(FALSE);
@@ -278,16 +278,16 @@ void CMFCGRIDDlg::OnBnClickedFlip()
 	int nInputHeight = m_arr2D.size();	//원본 행 크기
 	int nInputWidth = m_arr2D[0].size();	//원본 열 크기
 
-	int nx = nInputHeight * 40 + 4;		//90도 회전했기에 앞으로는 가로(Width)가 원본 Height
-	int ny = nInputWidth * 40 + 4;								 //세로(Height)가 원본 Width
+	int nx = nInputHeight * 45 + 4;		//90도 회전했기에 앞으로는 가로(Width)가 원본 Height
+	int ny = nInputWidth * 45 + 4;								 //세로(Height)가 원본 Width
 	m_ctrlGrid.MoveWindow(0, 0, nx, ny);
 	m_ctrlGrid.SetRowCount(nInputWidth);
 	m_ctrlGrid.SetColumnCount(nInputHeight);	
 	for (int col = 0; col < nInputHeight; col++) {
-		m_ctrlGrid.SetColumnWidth(col, 40);
+		m_ctrlGrid.SetColumnWidth(col, 45);
 	}
 	for (int row = 0; row < nInputWidth; row++) {
-		m_ctrlGrid.SetRowHeight(row, 40);
+		m_ctrlGrid.SetRowHeight(row, 45);
 	}
 
 	for (int row = 0; row < nInputWidth; row++) {

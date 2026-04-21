@@ -46,4 +46,5 @@ public:
 	afx_msg void OnBnClickedHoriz();
 	afx_msg void OnBnClickedVerti();
 	afx_msg void OnBnClickedFlip();
+	afx_msg void OnBnClickedFlipccw();
 };

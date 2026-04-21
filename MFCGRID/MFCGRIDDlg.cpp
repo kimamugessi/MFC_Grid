@@ -294,7 +294,7 @@ void CMFCGRIDDlg::OnBnClickedFlip()
 
 	for (int row = 0; row < nInputWidth; row++) {
 		for (int col = 0; col < nInputHeight; col++) {
-			int x = m_arr2D[nInputHeight - 1 - col][row];
+			int x = m_arr2D[(nInputHeight - 1) - col][row];
 			//COLORREF Gray = RGB(x, x, x);	//흑백으로 변경
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("%d"), x);
 			//m_ctrlGrid.SetItemBkColour(row, col, Gray);

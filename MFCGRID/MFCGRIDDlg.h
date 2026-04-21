@@ -4,6 +4,7 @@
 
 #pragma once
 #include "GridCtrl.h"
+#include <vector>
 
 // CMFCGRIDDlg 대화 상자
 class CMFCGRIDDlg : public CDialogEx
@@ -20,7 +21,9 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 지원입니다.
 
-
+private:
+	// 두 함수에서 모두 쓸 수 있도록 여기에 멤버 변수를 선언합니다.
+	std::vector<std::vector<int>> m_arr2D;
 // 구현입니다.
 protected:
 	HICON m_hIcon;
@@ -40,4 +43,6 @@ public:
 	CEdit m_nWidth;
 	afx_msg void OnBnClickedRandom();
 	afx_msg void OnBnClickedAdd();
+	afx_msg void OnBnClickedHoriz();
+	afx_msg void OnBnClickedVerti();
 };

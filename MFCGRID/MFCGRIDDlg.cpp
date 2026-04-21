@@ -74,6 +74,8 @@ BEGIN_MESSAGE_MAP(CMFCGRIDDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CREATE, &CMFCGRIDDlg::OnBnClickedCreate)
 	ON_BN_CLICKED(IDC_RANDOM, &CMFCGRIDDlg::OnBnClickedRandom)
 	ON_BN_CLICKED(IDC_ADD, &CMFCGRIDDlg::OnBnClickedAdd)
+	ON_BN_CLICKED(IDC_HORIZ, &CMFCGRIDDlg::OnBnClickedHoriz)
+	ON_BN_CLICKED(IDC_VERTI, &CMFCGRIDDlg::OnBnClickedVerti)
 END_MESSAGE_MAP()
 
 
@@ -178,8 +180,8 @@ void CMFCGRIDDlg::OnBnClickedCreate()
 			return;
 		}
 	}
-	int nx = nInputWidth *40;
-	int ny = nInputHeight * 40;
+	int nx = nInputWidth * 40+4;
+	int ny = nInputHeight * 40+4;
 	m_ctrlGrid.MoveWindow(0, 0, nx,ny);
 	m_ctrlGrid.SetRowCount(nInputHeight);	//행(가로)의 크기 설정
 	m_ctrlGrid.SetColumnCount(nInputWidth);	//열(세로)의 크기 설정
@@ -218,12 +220,52 @@ void CMFCGRIDDlg::OnBnClickedAdd()
 	int nInputHeight = GetDlgItemInt(IDC_HEIGHT);
 	int nInputWidth = GetDlgItemInt(IDC_WIDTH);
 
-	std::vector<std::vector<int>> arr2D(nInputHeight, std::vector<int>(nInputWidth, 0));	//백터를 사용해서 배열 작성	/가로줄 만들고 가로줄을 반복해서 배열 생성   vector<std::vector<int>>: .int vecter를 담겠다 -> int 1 차원 배열 여러개 = 2차원
+	m_arr2D.assign(nInputHeight, std::vector<int>(nInputWidth, 0));
 	for (int row = 0; row < nInputHeight; row++) {
 		for (int col = 0; col < nInputWidth; col++) {
 			CString strText=m_ctrlGrid.GetItemText(row, col);	//텍스트를 뽑아와라
-			arr2D[row][col] = _ttoi(strText);	//text to int 해서 저장
-			TRACE(_T("arr2D[%d][%d]의 값: %d\n"),row,col, arr2D[row][col]);	//확인을 위한 것 추후 제거 요망
+			m_arr2D[row][col] = _ttoi(strText);	//text to int 해서 저장
+			TRACE(_T("arr2D[%d][%d]의 값: %d\n"),row,col, m_arr2D[row][col]);	//확인을 위한 것 추후 제거 요망
 		}
 	}
 }
+
+//======horizon 버튼 클릭할 때======
+void CMFCGRIDDlg::OnBnClickedHoriz()
+{
+	UpdateData(TRUE);
+	int nInputHeight = GetDlgItemInt(IDC_HEIGHT);
+	int nInputWidth = GetDlgItemInt(IDC_WIDTH);
+	OnBnClickedAdd();	//배열을 활용해서 하기 위한 배열 형성 코드(중요)
+
+	for (int row = 0; row < nInputHeight; row++) {
+		for (int col = 0; col < nInputWidth; col++) {
+			int x = m_arr2D[row][nInputWidth-1-col];	//배열의 열을 거꾸로 만들기(입력값은 3일 떄 0 1 2로 형성되기에 -1을 해줌)
+			//COLORREF Gray = RGB(x, x, x);	//흑백으로 변경
+			m_ctrlGrid.SetItemTextFmt(row, col, _T("% d"), x);	// 작성하는 것을 행열만큼 반복
+			//m_ctrlGrid.SetItemBkColour(row, col, Gray);		//값을 흑백으로 색상 칠하기
+		}
+	}
+	m_ctrlGrid.Invalidate();	//그리드 화면 새로 고침 필수
+	UpdateData(FALSE);
+}
+
+//======Vertical버튼 클릭할 때======
+void CMFCGRIDDlg::OnBnClickedVerti()
+{
+	UpdateData(TRUE);
+	int nInputHeight = GetDlgItemInt(IDC_HEIGHT);
+	int nInputWidth = GetDlgItemInt(IDC_WIDTH);
+	OnBnClickedAdd();//배열을 활용해서 하기 위한 배열 형성 코드(중요)
+	
+	for (int row = 0; row < nInputHeight; row++) {
+		for (int col = 0; col < nInputWidth; col++) {
+			int x = m_arr2D[nInputHeight - 1 - row][col];	//배열의 열을 거꾸로 만들기(입력값은 3일 떄 0 1 2로 형성되기에 -1을 해줌 
+			//COLORREF Gray = RGB(x, x, x);	//흑백으로 변경
+			m_ctrlGrid.SetItemTextFmt(row, col, _T("% d"), x);	// 작성하는 것을 행열만큼 반복
+			//m_ctrlGrid.SetItemBkColour(row, col, Gray);		//값을 흑백으로 색상 칠하기
+		}
+	}
+	m_ctrlGrid.Invalidate();	//그리드 화면 새로 고침 필수
+	UpdateData(FALSE);
+} 

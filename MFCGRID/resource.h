@@ -14,6 +14,9 @@
 #define IDC_RANDOM                      1004
 #define IDC_CREATE2                     1005
 #define IDC_ADD                         1005
+#define IDC_                            1006
+#define IDC_HORIZ                       1006
+#define IDC_VERTI                       1007
 
 // Next default values for new objects
 // 

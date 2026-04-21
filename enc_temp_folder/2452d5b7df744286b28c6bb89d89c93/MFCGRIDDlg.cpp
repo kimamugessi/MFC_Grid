@@ -231,7 +231,7 @@ void CMFCGRIDDlg::OnBnClickedAdd()
 	}
 }
 
-//======Horizon 버튼 클릭할 때======
+//======horizon 버튼 클릭할 때======
 void CMFCGRIDDlg::OnBnClickedHoriz()
 {
 	UpdateData(TRUE);
@@ -271,7 +271,6 @@ void CMFCGRIDDlg::OnBnClickedVerti()
 	UpdateData(FALSE);
 } 
 
-//======Flip(+90°) 버튼 누를 때
 void CMFCGRIDDlg::OnBnClickedFlip()
 {	
 	OnBnClickedAdd();
@@ -283,7 +282,7 @@ void CMFCGRIDDlg::OnBnClickedFlip()
 	int ny = nInputWidth * 45 + 4;								 //세로(Height)가 원본 Width
 	m_ctrlGrid.MoveWindow(0, 0, nx, ny);
 	m_ctrlGrid.SetRowCount(nInputWidth);
-	m_ctrlGrid.SetColumnCount(nInputHeight);
+	m_ctrlGrid.SetColumnCount(nInputHeight);	
 	for (int col = 0; col < nInputHeight; col++) {
 		m_ctrlGrid.SetColumnWidth(col, 45);
 	}
@@ -296,7 +295,7 @@ void CMFCGRIDDlg::OnBnClickedFlip()
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("%d"), m_arr2D[nInputHeight - 1 - col][row]);
 		}
 	}
-	SetDlgItemInt(IDC_HEIGHT, nInputWidth);	//동기화를 시켜야함!! 그래야 다시 버튼을 누를 때 코드 설정 편하고 가독성도 좋음 
+	SetDlgItemInt(IDC_HEIGHT, nInputWidth);	//동기화를 시켜야함!! 그래야 다시 버튼을 누를 때 편하하고 가독성도 좋음 
 	SetDlgItemInt(IDC_WIDTH, nInputHeight);
 	m_ctrlGrid.Invalidate();
 }

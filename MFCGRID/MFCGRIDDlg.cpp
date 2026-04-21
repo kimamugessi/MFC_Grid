@@ -227,7 +227,7 @@ void CMFCGRIDDlg::OnBnClickedAdd()
 		for (int col = 0; col < nInputWidth; col++) {
 			CString strText=m_ctrlGrid.GetItemText(row, col);	//텍스트를 뽑아와라
 			m_arr2D[row][col] = _ttoi(strText);	//text to int 해서 저장
-			TRACE(_T("arr2D[%d][%d]의 값: %d\n"),row,col, m_arr2D[row][col]);	//확인을 위한 것 추후 제거 요망
+			//TRACE(_T("arr2D[%d][%d]의 값: %d\n"),row,col, m_arr2D[row][col]);	//확인을 위한 것 추후 제거 요망
 		}
 	}
 }

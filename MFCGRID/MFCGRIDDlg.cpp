@@ -209,13 +209,13 @@ void CMFCGRIDDlg::OnBnClickedRandom()
 			int x = rand() % 256;	//랜덤 함수 0~255까지 
 			//COLORREF randomGray = RGB(x, x, x);	//흑백으로 변경
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("% d"), x);	//랜덤 함수를 칸에 작성하는 것을 행열만큼 반복
+
 			//m_ctrlGrid.SetItemBkColour(row, col, randomGray);		//값을 흑백으로 색상 칠하기
 		}
 	}
 	m_ctrlGrid.Invalidate();	//그리드 화면 새로 고침 필수
 	UpdateData(FALSE);
 }
-
 //=======더하기 버튼 누를 때======
 void CMFCGRIDDlg::OnBnClickedAdd()
 {
@@ -327,7 +327,7 @@ void CMFCGRIDDlg::OnBnClickedFlipccw()
 
 	for (int row = 0; row < nInputWidth; row++) {
 		for (int col = 0; col < nInputHeight; col++) {
-			int x = m_arr2D[col][nInputWidth - 1 - row];	//+90°일 때 int x = m_arr2D[nInputHeight - 1 - col][row]; (비교를 위해 작성)
+			int x = m_arr2D[col][nInputWidth - 1 - row];	//+90°일 때: int x = m_arr2D[nInputHeight - 1 - col][row]; (비교를 위해 작성)
 			//COLORREF Gray = RGB(x, x, x);	//흑백으로 변경
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("%d"), x);
 			//m_ctrlGrid.SetItemBkColour(row, col, Gray);

@@ -77,7 +77,7 @@ BEGIN_MESSAGE_MAP(CMFCGRIDDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_HORIZ, &CMFCGRIDDlg::OnBnClickedHoriz)
 	ON_BN_CLICKED(IDC_VERTI, &CMFCGRIDDlg::OnBnClickedVerti)
 	ON_BN_CLICKED(IDC_FLIP, &CMFCGRIDDlg::OnBnClickedFlip)
-	ON_BN_CLICKED(IDC_FLIPCCW, &CMFCGRIDDlg::OnBnClickedFlipccw)
+	ON_BN_CLICKED(IDC_FLIPCCW, &CMFCGRIDDlg::OnBnClickedFlipCcw)
 END_MESSAGE_MAP()
 
 
@@ -256,7 +256,7 @@ void CMFCGRIDDlg::OnBnClickedVerti()
 
 	for (int row = 0; row < nInputHeight; row++) {
 		for (int col = 0; col < nInputWidth; col++) {
-			int x = m_arr2D[row][(nInputWidth - 1)- col];	//배열의 열을 거꾸로 만들기(입력값은 3일 떄 0 1 2로 형성되기에 -1을 해줌)
+			int x = m_arr2D[row][nInputWidth - 1- col];	//배열의 열을 거꾸로 만들기(입력값은 3일 떄 0 1 2로 형성되기에 -1을 해줌)
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("% d"), x);	// 작성하는 것을 행열만큼 반복
 		}
 	}
@@ -296,7 +296,7 @@ void CMFCGRIDDlg::OnBnClickedFlip()
 }
 
 //======Flip(-90°) 버튼 누를 때======
-void CMFCGRIDDlg::OnBnClickedFlipccw()
+void CMFCGRIDDlg::OnBnClickedFlipCcw()
 {
 	OnBnClickedAdd();
 	if (m_arr2D.empty()) return;

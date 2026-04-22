@@ -112,7 +112,7 @@ BOOL CMFCGRIDDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
-	MoveWindow(0, 0, 1280, 956);
+	MoveWindow(0, 0, 1280, 950);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -207,10 +207,7 @@ void CMFCGRIDDlg::OnBnClickedRandom()
 	for (int col = 0; col < nInputWidth; col++) {
 		for (int row = 0; row < nInputHeight; row++) {
 			int x = rand() % 256;	//랜덤 함수 0~255까지 
-			//COLORREF randomGray = RGB(x, x, x);	//흑백으로 변경
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("% d"), x);	//랜덤 함수를 칸에 작성하는 것을 행열만큼 반복
-
-			//m_ctrlGrid.SetItemBkColour(row, col, randomGray);		//값을 흑백으로 색상 칠하기
 		}
 	}
 	m_ctrlGrid.Invalidate();	//그리드 화면 새로 고침 필수
@@ -243,9 +240,7 @@ void CMFCGRIDDlg::OnBnClickedHoriz()
 	for (int row = 0; row < nInputHeight; row++) {
 		for (int col = 0; col < nInputWidth; col++) {
 			int x = m_arr2D[nInputHeight - 1 - row][col];	//배열의 행을 거꾸로 만들기(입력값은 3일 떄 0 1 2로 형성되기에 -1을 해줌)	
-			//COLORREF Gray = RGB(x, x, x);	//흑백으로 변경
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("% d"), x);	// 작성하는 것을 행열만큼 반복
-			//m_ctrlGrid.SetItemBkColour(row, col, Gray);		//값을 흑백으로 색상 칠하기
 		}
 	}
 	m_ctrlGrid.Invalidate();	//그리드 화면 새로 고침 필수
@@ -263,9 +258,7 @@ void CMFCGRIDDlg::OnBnClickedVerti()
 	for (int row = 0; row < nInputHeight; row++) {
 		for (int col = 0; col < nInputWidth; col++) {
 			int x = m_arr2D[row][(nInputWidth - 1)- col];	//배열의 열을 거꾸로 만들기(입력값은 3일 떄 0 1 2로 형성되기에 -1을 해줌)
-			//COLORREF Gray = RGB(x, x, x);	//흑백으로 변경
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("% d"), x);	// 작성하는 것을 행열만큼 반복
-			//m_ctrlGrid.SetItemBkColour(row, col, Gray);		//값을 흑백으로 색상 칠하기
 		}
 	}
 	m_ctrlGrid.Invalidate();	//그리드 화면 새로 고침 필수
@@ -295,9 +288,7 @@ void CMFCGRIDDlg::OnBnClickedFlip()
 	for (int row = 0; row < nInputWidth; row++) {
 		for (int col = 0; col < nInputHeight; col++) {
 			int x = m_arr2D[nInputHeight - 1 - col][row];
-			//COLORREF Gray = RGB(x, x, x);	//흑백으로 변경
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("%d"), x);
-			//m_ctrlGrid.SetItemBkColour(row, col, Gray);
 		}
 	}
 	SetDlgItemInt(IDC_HEIGHT, nInputWidth);	//동기화를 시켜야함!! 그래야 다시 버튼을 누를 때 코드 설정 편하고 가독성도 좋음 
@@ -328,9 +319,7 @@ void CMFCGRIDDlg::OnBnClickedFlipccw()
 	for (int row = 0; row < nInputWidth; row++) {
 		for (int col = 0; col < nInputHeight; col++) {
 			int x = m_arr2D[col][nInputWidth - 1 - row];	//+90°일 때: int x = m_arr2D[nInputHeight - 1 - col][row]; (비교를 위해 작성)
-			//COLORREF Gray = RGB(x, x, x);	//흑백으로 변경
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("%d"), x);
-			//m_ctrlGrid.SetItemBkColour(row, col, Gray);
 		}
 	}
 	SetDlgItemInt(IDC_HEIGHT, nInputWidth);	//동기화를 시켜야함!! 그래야 다시 버튼을 누를 때 코드 설정 편하고 가독성도 좋음 

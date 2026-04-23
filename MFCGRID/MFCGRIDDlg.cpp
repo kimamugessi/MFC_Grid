@@ -172,7 +172,7 @@ void CMFCGRIDDlg::OnBnClickedCreate()
 {
 	UpdateData(TRUE);
 	m_ctrlGrid.DeleteAllItems();	//기존 적혀 있던 숫자들 삭제
-	m_ctrlGrid.SetEditable(FALSE);
+	m_ctrlGrid.SetEditable(FALSE);	//셀 편집 비활성화
 	int nInputHeight = GetDlgItemInt(IDC_HEIGHT);	//해당 에디트 박스에 적힌 int 가져오기
 	int nInputWidth = GetDlgItemInt(IDC_WIDTH);		
 
@@ -185,8 +185,8 @@ void CMFCGRIDDlg::OnBnClickedCreate()
 	int nx = nInputWidth * 45+4;
 	int ny = nInputHeight * 45+4;
 	m_ctrlGrid.MoveWindow(0, 0, nx,ny);
-	m_ctrlGrid.SetRowCount(nInputHeight);	//행(가로)의 크기 설정
-	m_ctrlGrid.SetColumnCount(nInputWidth);	//열(세로)의 크기 설정
+	m_ctrlGrid.SetRowCount(nInputHeight);	//행(가로)의 갯수 설정
+	m_ctrlGrid.SetColumnCount(nInputWidth);	//열(세로)의 갯수 설정
 	
 	for (int col = 0; col < nInputWidth; col++) {	//반복해라 작성한만큼
 		m_ctrlGrid.SetColumnWidth(col,45);	//45*45 크기로 행을 갯수만큼 생성
@@ -238,7 +238,7 @@ void CMFCGRIDDlg::OnBnClickedHoriz()
 
 	for (int row = 0; row < nInputHeight; row++) {
 		for (int col = 0; col < nInputWidth; col++) {
-			int x = m_arr2D[nInputHeight - 1 - row][col];	//배열의 행을 거꾸로 만들기(입력값은 3일 떄 0 1 2로 형성되기에 -1을 해줌)	
+			int x = m_arr2D[static_cast<LONGLONG>(nInputHeight) - 1 - row][col];	//배열의 행을 거꾸로 만들기(입력값은 3일 떄 0 1 2로 형성되기에 -1을 해줌)	
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("% d"), x);	// 작성하는 것을 행열만큼 반복
 		}
 	}
@@ -256,7 +256,7 @@ void CMFCGRIDDlg::OnBnClickedVerti()
 
 	for (int row = 0; row < nInputHeight; row++) {
 		for (int col = 0; col < nInputWidth; col++) {
-			int x = m_arr2D[row][nInputWidth - 1- col];	//배열의 열을 거꾸로 만들기(입력값은 3일 떄 0 1 2로 형성되기에 -1을 해줌)
+			int x = m_arr2D[row][static_cast<LONGLONG>(nInputWidth) - 1- col];	//배열의 열을 거꾸로 만들기(입력값은 3일 떄 0 1 2로 형성되기에 -1을 해줌)	
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("% d"), x);	// 작성하는 것을 행열만큼 반복
 		}
 	}
@@ -269,8 +269,8 @@ void CMFCGRIDDlg::OnBnClickedFlip()
 {	
 	OnBnClickedAdd();
 	if (m_arr2D.empty()) return;
-	int nInputHeight = m_arr2D.size();	//원본 행 크기
-	int nInputWidth = m_arr2D[0].size();	//원본 열 크기
+	int nInputHeight = static_cast<int>(m_arr2D.size());	//원본 행 크기
+	int nInputWidth = static_cast<int>(m_arr2D[0].size());	//원본 열 크기
 
 	int nx = nInputHeight * 45 + 4;		//90도 회전했기에 앞으로는 가로(Width)가 원본 Height
 	int ny = nInputWidth * 45 + 4;								 //세로(Height)가 원본 Width
@@ -286,7 +286,7 @@ void CMFCGRIDDlg::OnBnClickedFlip()
 
 	for (int row = 0; row < nInputWidth; row++) {
 		for (int col = 0; col < nInputHeight; col++) {
-			int x = m_arr2D[nInputHeight - 1 - col][row];
+			int x = m_arr2D[static_cast<LONGLONG>(nInputHeight) - 1 - col][row];
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("%d"), x);
 		}
 	}
@@ -300,8 +300,8 @@ void CMFCGRIDDlg::OnBnClickedFlipCcw()
 {
 	OnBnClickedAdd();
 	if (m_arr2D.empty()) return;
-	int nInputHeight = m_arr2D.size();	//원본 행 크기
-	int nInputWidth = m_arr2D[0].size();	//원본 열 크기
+	int nInputHeight = static_cast<int>(m_arr2D.size());	//원본 행 크기
+	int nInputWidth = static_cast<int>(m_arr2D[0].size());	//원본 열 크기
 
 	int nx = nInputHeight * 45 + 4;		//90도 회전했기에 앞으로는 가로(Width)가 원본 Height
 	int ny = nInputWidth * 45 + 4;								 //세로(Height)가 원본 Width
@@ -317,7 +317,7 @@ void CMFCGRIDDlg::OnBnClickedFlipCcw()
 
 	for (int row = 0; row < nInputWidth; row++) {
 		for (int col = 0; col < nInputHeight; col++) {
-			int x = m_arr2D[col][nInputWidth - 1 - row];	//+90°일 때: int x = m_arr2D[nInputHeight - 1 - col][row]; (비교를 위해 작성)
+			int x = m_arr2D[col][static_cast<LONGLONG>(nInputWidth) - 1 - row];	//+90°일 때: int x = m_arr2D[nInputHeight - 1 - col][row]; (비교를 위해 작성)
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("%d"), x);
 		}
 	}
@@ -325,3 +325,19 @@ void CMFCGRIDDlg::OnBnClickedFlipCcw()
 	SetDlgItemInt(IDC_WIDTH, nInputHeight);
 	m_ctrlGrid.Invalidate();
 }
+
+/*
+static_cast<형식> : 명시적 형변환
+
+m_ctrlGrid
+.MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) : x,y 좌표에서 nWidth,nHeight만큼 크기 조절
+.SetRowCount(int nRows) : 행(가로)의 갯수를 nRows로 설정
+.SetColumnCount(int nCols) : 열(세로)의 갯수를 nCols로 설정
+.SetItemTextFmt() : 텍스트를 형식에 맞게 삽입
+.SetColumnWidth(int col, int width) : 특정 행(col)을 width 크기로 생성
+.SetRowHeight(int row, int height) : 특정 열(row)을 height 크기로 설정
+.GetItemText(int nRow, int nCol, LPCTSTR szFmt, ...) : (nRow, nCol)셀 안에 있는 text를  _T("%형식")로 가져옴
+.DeleteAllItems() : 모든 셀 내용 삭제
+.SetEditable() : 셀 내용 편집 여부
+.Invalidate() : 갱신
+*/

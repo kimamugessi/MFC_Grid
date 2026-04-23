@@ -28,8 +28,6 @@ END_MESSAGE_MAP()
 // CMFCGRIDDlg 대화 상자
 CMFCGRIDDlg::CMFCGRIDDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFCGRID_DIALOG, pParent)
-	, m_nHeight(_T(""))
-	, m_nThreshold(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -38,10 +36,11 @@ void CMFCGRIDDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_GRID, m_ctrlGrid);
-	DDX_Text(pDX, IDC_HEIGHT, m_nHeight);
+	//  DDX_Text(pDX, IDC_HEIGHT, m_nHeight);
 	DDX_Control(pDX, IDC_WIDTH, m_nWidth);
 	DDX_Control(pDX, IDC_SLIDER_THRESHOLD, m_sldThreshold);
 	DDX_Text(pDX, IDC_THRESHOLD, m_nThreshold);
+	DDX_Control(pDX, IDC_HEIGHT, m_nHeight);
 }
 
 BEGIN_MESSAGE_MAP(CMFCGRIDDlg, CDialogEx)
@@ -141,8 +140,6 @@ void CMFCGRIDDlg::OnBnClickedCreate()
 		AfxMessageBox(_T("최대 크기는 20*20 입니다."), (MB_OK | MB_ICONEXCLAMATION));
 		if (nInputHeight > 20) {
 			nInputHeight = 20;
-
-			m_nHeight = "20";
 			SetDlgItemInt(IDC_HEIGHT, nInputHeight);
 		}
 		if (nInputWidth > 20) {

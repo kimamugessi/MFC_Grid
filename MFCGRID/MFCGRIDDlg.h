@@ -36,7 +36,7 @@ public:
 //	CInt m_nWidth;
 //	CInt m_nHeight;
 	afx_msg void OnBnClickedCreate();
-	CString m_nHeight;
+//	CString m_nHeight;
 	CEdit m_nWidth;
 	afx_msg void OnBnClickedRandom();
 	afx_msg void OnBnClickedAdd();
@@ -59,4 +59,6 @@ private:
 
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnBnClickedSetThre();
+public:
+	CEdit m_nHeight;
 };

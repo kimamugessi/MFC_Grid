@@ -81,7 +81,6 @@ BOOL CMFCGRIDDlg::OnInitDialog()
 			pSysMenu->AppendMenu(MF_STRING, IDM_ABOUTBOX, strAboutMenu);
 		}
 	}
-
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
@@ -140,12 +139,27 @@ void CMFCGRIDDlg::OnBnClickedCreate()
 
 	if (nInputHeight > 20 || nInputWidth > 20) {
 		AfxMessageBox(_T("최대 크기는 20*20 입니다."), (MB_OK | MB_ICONEXCLAMATION));
-		return;
-	}
+		if (nInputHeight > 20) {
+			nInputHeight = 20;
 
-	ResizeGrid(nInputHeight, nInputWidth);
-	m_arr2D_view.clear(); m_arr2D_ori.clear(); // 배열 초기화
-	UpdateData(FALSE);
+			m_nHeight = "20";
+			SetDlgItemInt(IDC_HEIGHT, nInputHeight);
+		}
+		if (nInputWidth > 20) {
+			nInputWidth = 20;
+			SetDlgItemInt(IDC_WIDTH, nInputWidth);
+		}
+		ResizeGrid(nInputHeight, nInputWidth);
+		m_arr2D_view.clear(); 
+		m_arr2D_ori.clear(); // 배열 초기화
+		UpdateData(FALSE);
+	}
+	else {
+		ResizeGrid(nInputHeight, nInputWidth);
+		m_arr2D_view.clear();
+		m_arr2D_ori.clear(); // 배열 초기화
+		UpdateData(FALSE);
+	}
 }
 
 // =======난수 버튼 누를 때======

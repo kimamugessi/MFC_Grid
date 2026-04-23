@@ -144,7 +144,7 @@ void CMFCGRIDDlg::OnBnClickedCreate()
 	}
 
 	ResizeGrid(nInputHeight, nInputWidth);
-	m_arr2D.clear(); m_arr2D_ori.clear(); // 배열 초기화
+	m_arr2D_view.clear(); m_arr2D_ori.clear(); // 배열 초기화
 	UpdateData(FALSE);
 }
 
@@ -177,8 +177,8 @@ void CMFCGRIDDlg::OnBnClickedAdd()
 			m_arr2D_ori[row][col] = _ttoi(strText);	//text to int 해서 저장
 		}
 	}
-	m_arr2D = m_arr2D_ori; // 초기 배열 동기화
-	AfxMessageBox(_T("데이터가 저장되었습니다."));
+	m_arr2D_view = m_arr2D_ori; // 초기 배열 동기화
+	AfxMessageBox(_T("데이터가 저장되었습니다."),(MB_OK|MB_ICONINFORMATION));
 }
 
 // ======Horizon 버튼 클릭할 때======
@@ -191,15 +191,15 @@ void CMFCGRIDDlg::OnBnClickedHoriz()
 
 	int H = (int)m_arr2D_ori.size();
 	int W = (int)m_arr2D_ori[0].size();
-	std::vector<std::vector<int>> tmp(H, std::vector<int>(W, 0));
+	std::vector<std::vector<int>> temp(H, std::vector<int>(W, 0));	//임시 배열을 생성
 
 	for (int row = 0; row < H; row++) {
 		for (int col = 0; col < W; col++) {
-			tmp[row][col] = m_arr2D_ori[H - 1 - row][col];	//배열의 행을 거꾸로 만들기
+			temp[row][col] = m_arr2D_ori[H - 1 - row][col];	//배열의 행을 거꾸로 만들기
 		}
 	}
 
-	m_arr2D_ori = tmp; // 변환된 상태를 새 원본으로 확정
+	m_arr2D_ori = temp;	//임시 배열을 본 배열에 넣기
 	ApplyThresholdLogic(m_sldThreshold.GetPos()); // 현재 슬라이더 값에 맞춰 그리드 갱신
 }
 
@@ -213,15 +213,15 @@ void CMFCGRIDDlg::OnBnClickedVerti()
 
 	int H = (int)m_arr2D_ori.size();
 	int W = (int)m_arr2D_ori[0].size();
-	std::vector<std::vector<int>> tmp(H, std::vector<int>(W, 0));
+	std::vector<std::vector<int>> temp(H, std::vector<int>(W, 0));	//가로 칸이 W개고 모두 0으로 채워 만들어라
 
 	for (int row = 0; row < H; row++) {
 		for (int col = 0; col < W; col++) {
-			tmp[row][col] = m_arr2D_ori[row][W - 1 - col]; // 배열의 열을 거꾸로 만들기
+			temp[row][col] = m_arr2D_ori[row][W - 1 - col]; // 배열의 열을 거꾸로 만들기
 		}
 	}
 
-	m_arr2D_ori = tmp;
+	m_arr2D_ori = temp;	
 	ApplyThresholdLogic(m_sldThreshold.GetPos());
 }
 
@@ -235,19 +235,19 @@ void CMFCGRIDDlg::OnBnClickedFlip()
 
 	int H = (int)m_arr2D_ori.size();
 	int W = (int)m_arr2D_ori[0].size();
-	std::vector<std::vector<int>> tmp(W, std::vector<int>(H, 0));
+	std::vector<std::vector<int>> temp(W, std::vector<int>(H, 0));
 
 	for (int row = 0; row < H; row++) {
 		for (int col = 0; col < W; col++) {
-			tmp[col][H - 1 - row] = m_arr2D_ori[row][col];
+			temp[col][H - 1 - row] = m_arr2D_ori[row][col];
 		}
 	}
 
-	m_arr2D_ori = tmp;
+	m_arr2D_ori = temp;
 	ResizeGrid(W, H); // 가로세로 크기 교체
 	SetDlgItemInt(IDC_HEIGHT, W);
 	SetDlgItemInt(IDC_WIDTH, H); // UI상 숫자 동기화
-	ApplyThresholdLogic(m_sldThreshold.GetPos());
+	ApplyThresholdLogic(m_sldThreshold.GetPos());	//데이터와 UI 동기화(화면 갱신)
 }
 
 // ======Flip(-90°) 버튼 누를 때======
@@ -260,15 +260,15 @@ void CMFCGRIDDlg::OnBnClickedFlipCcw()
 
 	int H = (int)m_arr2D_ori.size();
 	int W = (int)m_arr2D_ori[0].size();
-	std::vector<std::vector<int>> tmp(W, std::vector<int>(H, 0));
+	std::vector<std::vector<int>> temp(W, std::vector<int>(H, 0));
 
 	for (int row = 0; row < H; row++) {
 		for (int col = 0; col < W; col++) {
-			tmp[W - 1 - col][row] = m_arr2D_ori[row][col]; 
+			temp[W - 1 - col][row] = m_arr2D_ori[row][col]; 
 		}
 	}
 
-	m_arr2D_ori = tmp;
+	m_arr2D_ori = temp;
 	ResizeGrid(W, H);
 	SetDlgItemInt(IDC_HEIGHT, W);
 	SetDlgItemInt(IDC_WIDTH, H);
@@ -322,19 +322,19 @@ void CMFCGRIDDlg::ApplyThresholdLogic(int nThr)
 	int H = (int)m_arr2D_ori.size();
 	int W = (int)m_arr2D_ori[0].size();
 
-	m_arr2D.assign(H, std::vector<int>(W, 0));
-	m_ctrlGrid.SetRedraw(FALSE); // 깜빡임 방지
+	m_arr2D_view.assign(H, std::vector<int>(W, 0));
+	m_ctrlGrid.SetRedraw(FALSE); // 깜빡임 방지래요
 
 	for (int row = 0; row < H; row++) {
 		for (int col = 0; col < W; col++) {
 			// 원본(ori)은 유지 작업용(m_arr2D)만 0으로 변환
 			if (m_arr2D_ori[row][col] <= nThr) {
-				m_arr2D[row][col] = 0;
+				m_arr2D_view[row][col] = 0;
 			}
 			else {
-				m_arr2D[row][col] = m_arr2D_ori[row][col];
+				m_arr2D_view[row][col] = m_arr2D_ori[row][col];
 			}
-			m_ctrlGrid.SetItemTextFmt(row, col, _T("%d"), m_arr2D[row][col]);
+			m_ctrlGrid.SetItemTextFmt(row, col, _T("%d"), m_arr2D_view[row][col]);
 		}
 	}
 

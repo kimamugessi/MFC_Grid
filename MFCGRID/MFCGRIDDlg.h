@@ -21,9 +21,6 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 지원입니다.
 
-private:
-	// 두 함수에서 모두 쓸 수 있도록 여기에 멤버 변수를 선언합니다.
-	std::vector<std::vector<int>> m_arr2D;
 // 구현입니다.
 protected:
 	HICON m_hIcon;
@@ -47,4 +44,19 @@ public:
 	afx_msg void OnBnClickedVerti();
 	afx_msg void OnBnClickedFlip();
 	afx_msg void OnBnClickedFlipCcw();
+
+	// MFCGRIDDlg.h 에 추가
+private:
+	std::vector<std::vector<int>> m_arr2D;
+	std::vector<std::vector<int>> m_arr2D_ori;
+	CString      m_nThreshold;
+	CSliderCtrl  m_sldThreshold;
+
+	void ResizeGrid(int nRows, int nCols);
+	void FlushToGrid(const std::vector<std::vector<int>>& arr);
+	void ApplyRotation(std::vector<std::vector<int>>& newArr, int oriH, int oriW);
+	void ApplyThresholdLogic(int nThr);
+
+	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	afx_msg void OnBnClickedSetThre();
 };

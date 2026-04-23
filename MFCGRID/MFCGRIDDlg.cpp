@@ -307,7 +307,6 @@ void CMFCGRIDDlg::OnBnClickedSetThre()
 	ApplyThresholdLogic(nThrSet);
 }
 
-
 // ======그리드 UI 크기 동기화======
 void CMFCGRIDDlg::ResizeGrid(int nRows, int nCols)
 {

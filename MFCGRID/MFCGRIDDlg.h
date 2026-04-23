@@ -47,7 +47,7 @@ public:
 
 	// MFCGRIDDlg.h 에 추가
 private:
-	std::vector<std::vector<int>> m_arr2D;
+	std::vector<std::vector<int>> m_arr2D_view;
 	std::vector<std::vector<int>> m_arr2D_ori;
 	CString      m_nThreshold;
 	CSliderCtrl  m_sldThreshold;

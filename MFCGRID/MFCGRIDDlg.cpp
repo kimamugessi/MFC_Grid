@@ -150,10 +150,10 @@ void CMFCGRIDDlg::OnBnClickedCreate()
 			SetDlgItemInt(IDC_WIDTH, nInputWidth);
 		}
 	}
-		ResizeGrid(nInputHeight, nInputWidth);
-		m_arr2D_view.clear();
-		m_arr2D_ori.clear(); // 배열 초기화
-		UpdateData(FALSE);
+	ResizeGrid(nInputHeight, nInputWidth);
+	m_arr2D_view.clear();
+	m_arr2D_ori.clear(); // 배열 초기화
+	UpdateData(FALSE);
 }
 
 // =======난수 버튼 누를 때======

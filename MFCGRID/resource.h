@@ -23,6 +23,13 @@
 #define IDC_SLIDER_THRESHOLD            1010
 #define IDC_SETTHRE                     1011
 #define IDC_THRESHOLD                   1012
+#define IDC_RESET                       1014
+#define IDC_CROP_X                      1015
+#define IDC_RAND                        1016
+#define IDC_Crop                        1016
+#define IDC_CROP_Y                      1017
+#define IDC_CROP_W                      1018
+#define IDC_CROP_H                      1019
 
 // Next default values for new objects
 // 

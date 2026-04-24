@@ -65,4 +65,9 @@ private:
 	afx_msg void OnBnClickedSetThre();
 public:
 	CEdit m_nHeight;
+	CString ｍ_nCropX;
+//	CEdit ｍ_nCropY;
+	CString ｍ_nCropY;
+	CString ｍ_nCropW;
+	CString ｍ_nCropH;
 };

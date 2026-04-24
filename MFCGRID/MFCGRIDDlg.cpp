@@ -28,6 +28,10 @@ END_MESSAGE_MAP()
 // CMFCGRIDDlg 대화 상자
 CMFCGRIDDlg::CMFCGRIDDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFCGRID_DIALOG, pParent)
+	, ｍ_nCropX(_T(""))
+	, ｍ_nCropY(_T(""))
+	, ｍ_nCropW(_T(""))
+	, ｍ_nCropH(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -41,6 +45,11 @@ void CMFCGRIDDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SLIDER_THRESHOLD, m_sldThreshold);
 	DDX_Text(pDX, IDC_THRESHOLD, m_nThreshold);
 	DDX_Control(pDX, IDC_HEIGHT, m_nHeight);
+	DDX_Text(pDX, IDC_CROP_X, ｍ_nCropX);
+	//  DDX_Control(pDX, IDC_CROP_Y, ｍ_nCropY);
+	DDX_Text(pDX, IDC_CROP_Y, ｍ_nCropY);
+	DDX_Text(pDX, IDC_CROP_W, ｍ_nCropW);
+	DDX_Text(pDX, IDC_CROP_H, ｍ_nCropH);
 }
 
 BEGIN_MESSAGE_MAP(CMFCGRIDDlg, CDialogEx)

@@ -36,7 +36,6 @@ void CMFCGRIDDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_GRID, m_ctrlGrid);
-	//  DDX_Text(pDX, IDC_HEIGHT, m_nHeight);
 	DDX_Control(pDX, IDC_WIDTH, m_nWidth);
 	DDX_Control(pDX, IDC_SLIDER_THRESHOLD, m_sldThreshold);
 	DDX_Text(pDX, IDC_THRESHOLD, m_nThreshold);
@@ -386,6 +385,27 @@ void CMFCGRIDDlg::OnBnClickedCrop()
 	ApplyThresholdLogic(m_sldThreshold.GetPos());
 }
 
+//======Re 버튼 클릭할 때======
+void CMFCGRIDDlg::OnBnClickedRe()
+{
+	if (m_undoStack.empty()) {
+		AfxMessageBox(_T("되돌릴 내용이 없습니다."));
+		return;
+	}
+
+	m_arr2D_ori = m_undoStack.top();	//맨 위에 것
+	m_undoStack.pop();	//꺼내기
+
+	int H = m_arr2D_ori.size();
+	int W = m_arr2D_ori[0].size();
+
+	ResizeGrid(H, W);
+	SetDlgItemInt(IDC_HEIGHT, H);
+	SetDlgItemInt(IDC_WIDTH, W);
+	InitCropNum();
+	ApplyThresholdLogic(m_sldThreshold.GetPos());
+}
+
 // ======그리드 UI 크기 동기화======
 void CMFCGRIDDlg::ResizeGrid(int nRows, int nCols)
 {
@@ -451,6 +471,7 @@ void CMFCGRIDDlg::WhiteColor(int row, int col) {
 	m_ctrlGrid.SetItemBkColour(row, col, Black);
 }
 
+// ======크롭 창의 에디트 컨트롤 값 초기화 변수======
 void CMFCGRIDDlg::InitCropNum() {
 	SetDlgItemInt(IDC_CROP_X, 0);
 	SetDlgItemInt(IDC_CROP_Y, 0);
@@ -458,32 +479,12 @@ void CMFCGRIDDlg::InitCropNum() {
 	SetDlgItemInt(IDC_CROP_H, 0);
 }
 
-void CMFCGRIDDlg::OnBnClickedRe()
-{
-	if (m_undoStack.empty()) {
-		AfxMessageBox(_T("되돌릴 내용이 없습니다."));
-		return;
-	}
-
-	m_arr2D_ori = m_undoStack.top();	//맨 위에 것
-	m_undoStack.pop();	//꺼내기
-
-	int H = m_arr2D_ori.size();
-	int W = m_arr2D_ori[0].size();
-
-	ResizeGrid(H, W);
-	SetDlgItemInt(IDC_HEIGHT, H);
-	SetDlgItemInt(IDC_WIDTH, W);
-	InitCropNum();
-	ApplyThresholdLogic(m_sldThreshold.GetPos());
-}
-
+//=====윈도우 창 빈영역 선택 시 그리드 셀 선택 상태 초기화======
 void CMFCGRIDDlg::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	m_ctrlGrid.SetSelectedRange(-1, -1, -1, -1);
 	m_ctrlGrid.Invalidate();
 	InitCropNum();
-
 
 	CDialogEx::OnLButtonDown(nFlags, point);
 }

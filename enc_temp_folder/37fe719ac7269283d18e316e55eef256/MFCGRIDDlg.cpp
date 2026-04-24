@@ -450,4 +450,6 @@ void CMFCGRIDDlg::OnBnClickedRe()
 	SetDlgItemInt(IDC_HEIGHT, H);
 	SetDlgItemInt(IDC_WIDTH, W);
 	ApplyThresholdLogic(m_sldThreshold.GetPos());
+
+
 }

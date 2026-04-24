@@ -28,6 +28,8 @@
 #define IDC_CROP_Y                      1017
 #define IDC_CROP_W                      1018
 #define IDC_CROP_H                      1019
+#define IDC_Crop2                       1020
+#define IDC_Re                          1020
 
 // Next default values for new objects
 // 

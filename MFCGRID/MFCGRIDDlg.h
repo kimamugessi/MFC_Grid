@@ -5,6 +5,7 @@
 #pragma once
 #include "GridCtrl.h"
 #include <vector>
+#include <stack>
 
 // CMFCGRIDDlg 대화 상자
 class CMFCGRIDDlg : public CDialogEx
@@ -33,10 +34,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	CGridCtrl m_ctrlGrid;
-//	CInt m_nWidth;
-//	CInt m_nHeight;
 	afx_msg void OnBnClickedCreate();
-//	CString m_nHeight;
 	CEdit m_nWidth;
 	afx_msg void OnBnClickedRandom();
 	afx_msg void OnBnClickedAdd();
@@ -45,10 +43,10 @@ public:
 	afx_msg void OnBnClickedFlip();
 	afx_msg void OnBnClickedFlipCcw();
 
-	// MFCGRIDDlg.h 에 추가
 private:
 	std::vector<std::vector<int>> m_arr2D_view;
 	std::vector<std::vector<int>> m_arr2D_ori;
+	std::stack<std::vector<std::vector<int>>> m_undoStack;
 	CString      m_nThreshold;
 	CSliderCtrl  m_sldThreshold;
 
@@ -65,14 +63,10 @@ private:
 	afx_msg void OnBnClickedSetThre();
 public:
 	CEdit m_nHeight;
-//	CString ｍ_nCropX;
-//	CEdit ｍ_nCropY;
-//	CString ｍ_nCropY;
-//	CString ｍ_nCropW;
-//	CString ｍ_nCropH;
 	afx_msg void OnBnClickedCrop();
 	CEdit m_nCropW;
 	CEdit m_nCropH;
 	CEdit m_nCropX;
 	CEdit m_nCropY;
+	afx_msg void OnBnClickedRe();
 };

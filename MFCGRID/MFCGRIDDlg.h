@@ -70,6 +70,6 @@ public:
 	CEdit m_nCropH;
 	CEdit m_nCropX;
 	CEdit m_nCropY;
-	afx_msg void OnBnClickedRe();
+	afx_msg void OnBnClickedUndo();
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 };

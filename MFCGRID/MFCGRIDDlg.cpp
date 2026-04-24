@@ -60,7 +60,7 @@ BEGIN_MESSAGE_MAP(CMFCGRIDDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_FLIPCCW, &CMFCGRIDDlg::OnBnClickedFlipCcw)
 	ON_BN_CLICKED(IDC_SETTHRE, &CMFCGRIDDlg::OnBnClickedSetThre)
 	ON_BN_CLICKED(IDC_Crop, &CMFCGRIDDlg::OnBnClickedCrop)
-	ON_BN_CLICKED(IDC_Re, &CMFCGRIDDlg::OnBnClickedRe)
+	ON_BN_CLICKED(IDC_UNDO, &CMFCGRIDDlg::OnBnClickedUndo)
 	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
@@ -203,6 +203,7 @@ void CMFCGRIDDlg::OnBnClickedAdd()
 	}
 	m_arr2D_view = m_arr2D_ori; // 초기 배열 동기화
 	AfxMessageBox(_T("데이터가 저장되었습니다."),(MB_OK|MB_ICONINFORMATION));
+	while (!m_undoStack.empty()) { m_undoStack.pop(); }
 	ApplyThresholdLogic(m_sldThreshold.GetPos()); // 현재 슬라이더 값에 맞춰 그리드 갱신
 }
 
@@ -386,7 +387,7 @@ void CMFCGRIDDlg::OnBnClickedCrop()
 }
 
 //======Re 버튼 클릭할 때======
-void CMFCGRIDDlg::OnBnClickedRe()
+void CMFCGRIDDlg::OnBnClickedUndo()
 {
 	if (m_undoStack.empty()) {
 		AfxMessageBox(_T("되돌릴 내용이 없습니다."));
@@ -484,7 +485,6 @@ void CMFCGRIDDlg::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	m_ctrlGrid.SetSelectedRange(-1, -1, -1, -1);
 	m_ctrlGrid.Invalidate();
-	InitCropNum();
 
 	CDialogEx::OnLButtonDown(nFlags, point);
 }

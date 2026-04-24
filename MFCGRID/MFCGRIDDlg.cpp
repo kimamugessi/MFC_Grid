@@ -132,10 +132,12 @@ void CMFCGRIDDlg::OnBnClickedCreate()
 {
 	UpdateData(TRUE);
 	m_ctrlGrid.DeleteAllItems();	//기존 적혀 있던 숫자들 삭제
+	COLORREF White = RGB(255, 255, 255);
+
 	m_ctrlGrid.SetEditable(FALSE);	//셀 편집 비활성화
 	int nInputHeight = GetDlgItemInt(IDC_HEIGHT);	//해당 에디트 박스에 적힌 int 가져오기
 	int nInputWidth = GetDlgItemInt(IDC_WIDTH);
-
+	
 	if (nInputHeight > 20 || nInputWidth > 20) {
 		AfxMessageBox(_T("최대 크기는 20*20 입니다."), (MB_OK | MB_ICONEXCLAMATION));
 		if (nInputHeight > 20) {
@@ -147,6 +149,7 @@ void CMFCGRIDDlg::OnBnClickedCreate()
 			SetDlgItemInt(IDC_WIDTH, nInputWidth);
 		}
 	}
+	
 	ResizeGrid(nInputHeight, nInputWidth);
 	m_arr2D_view.clear();
 	m_arr2D_ori.clear(); // 배열 초기화
@@ -163,6 +166,8 @@ void CMFCGRIDDlg::OnBnClickedRandom()
 		for (int row = 0; row < nInputHeight; row++) {
 			int x = rand() % 256;	//랜덤 함수 0~255
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("%d"), x);
+			COLORREF White = RGB(255, 255, 255);
+			m_ctrlGrid.SetItemBkColour(row, col, White);
 		}
 	}
 	m_ctrlGrid.Invalidate();	//그리드 화면 새로 고침 필수
@@ -184,6 +189,8 @@ void CMFCGRIDDlg::OnBnClickedAdd()
 	}
 	m_arr2D_view = m_arr2D_ori; // 초기 배열 동기화
 	AfxMessageBox(_T("데이터가 저장되었습니다."),(MB_OK|MB_ICONINFORMATION));
+	m_ctrlGrid.Invalidate();	//그리드 화면 새로 고침 필수
+	ApplyThresholdLogic(m_sldThreshold.GetPos()); // 현재 슬라이더 값에 맞춰 그리드 갱신
 }
 
 // ======Horizon 버튼 클릭할 때======
@@ -307,7 +314,9 @@ void CMFCGRIDDlg::OnBnClickedSetThre()
 // ======그리드 UI 크기 동기화======
 void CMFCGRIDDlg::ResizeGrid(int nRows, int nCols)
 {
-	m_ctrlGrid.MoveWindow(0, 0, nCols * 45 + 4, nRows * 45 + 4);
+	int GW = nCols * 45 + 4;
+	int GH = nRows * 45 + 4;
+	m_ctrlGrid.MoveWindow(452 - GW / 2, 452 - GH / 2, GW, GH);	//생성 그리드를 그리드 View 중앙에 배치
 	m_ctrlGrid.SetRowCount(nRows);
 	m_ctrlGrid.SetColumnCount(nCols);
 	for (int col = 0; col < nCols; col++) {
@@ -333,10 +342,12 @@ void CMFCGRIDDlg::ApplyThresholdLogic(int nThr)
 		for (int col = 0; col < W; col++) {
 			// 원본(ori)은 유지 작업용(m_arr2D)만 0으로 변환
 			if (m_arr2D_ori[row][col] <= nThr) {
-				m_arr2D_view[row][col] = 0;
+				//m_arr2D_view[row][col] = 0;	//해당 코드 작성하지 않아도 배열 생성 단계에서 모든 칸을 0으로 설정했기에 0으로 자동 입력
+				BlackColor(row,col);
 			}
 			else {
 				m_arr2D_view[row][col] = m_arr2D_ori[row][col];
+				WhiteColor(row, col);
 			}
 			m_ctrlGrid.SetItemTextFmt(row, col, _T("%d"), m_arr2D_view[row][col]);
 		}
@@ -346,4 +357,16 @@ void CMFCGRIDDlg::ApplyThresholdLogic(int nThr)
 	UpdateData(FALSE);
 	m_ctrlGrid.SetRedraw(TRUE);
 	m_ctrlGrid.Invalidate();
+}
+
+//======그리드 색깔_검정======
+void CMFCGRIDDlg::BlackColor(int row, int col) {
+	COLORREF Black = RGB(0, 0, 0);
+	m_ctrlGrid.SetItemBkColour(row, col, Black);
+}
+
+//======그리드 색깔_흰======
+void CMFCGRIDDlg::WhiteColor(int row, int col) {
+	COLORREF Black = RGB(255, 255, 255);
+	m_ctrlGrid.SetItemBkColour(row, col, Black);
 }

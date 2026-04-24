@@ -57,6 +57,10 @@ private:
 	void ApplyRotation(std::vector<std::vector<int>>& newArr, int oriH, int oriW);
 	void ApplyThresholdLogic(int nThr);
 
+	void BlackColor(int row, int col);
+
+	void WhiteColor(int row, int col);
+
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnBnClickedSetThre();
 public:

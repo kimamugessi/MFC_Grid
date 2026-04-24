@@ -145,7 +145,7 @@ void CMFCGRIDDlg::OnBnClickedCreate()
 	int nInputWidth = GetDlgItemInt(IDC_WIDTH);
 	
 	if (nInputHeight > 20 || nInputWidth > 20) {
-		AfxMessageBox(_T("최대 크기는 20*20 입니다."), (MB_OK | MB_ICONEXCLAMATION));
+		AfxMessageBox(_T("최대 크기는 20*20 입니다."));
 		if (nInputHeight > 20) {
 			nInputHeight = 20;
 			SetDlgItemInt(IDC_HEIGHT, nInputHeight);
@@ -159,10 +159,7 @@ void CMFCGRIDDlg::OnBnClickedCreate()
 	ResizeGrid(nInputHeight, nInputWidth);
 	m_arr2D_view.clear();
 	m_arr2D_ori.clear(); // 배열 초기화
-	SetDlgItemInt(IDC_CROP_X, 0);
-	SetDlgItemInt(IDC_CROP_Y, 0);
-	SetDlgItemInt(IDC_CROP_W, 0);
-	SetDlgItemInt(IDC_CROP_H, 0);
+	InitCropNum();
 	while (!m_undoStack.empty()) { m_undoStack.pop(); }	//만들기 했을 때 스택 비우기(초기화)
 	UpdateData(FALSE);
 }
@@ -182,6 +179,7 @@ void CMFCGRIDDlg::OnBnClickedRandom()
 		}
 	}
 	m_ctrlGrid.Invalidate();	//그리드 화면 새로 고침 필수
+	InitCropNum();
 	UpdateData(FALSE);
 }
 
@@ -192,7 +190,7 @@ void CMFCGRIDDlg::OnBnClickedAdd()
 	int nInputWidth = m_ctrlGrid.GetColumnCount();
 
 	if (nInputHeight == 0 || nInputWidth == 0) {
-		AfxMessageBox(_T("먼저 그리드를 생성하세요."), (MB_OK | MB_ICONEXCLAMATION));
+		AfxMessageBox(_T("먼저 그리드를 생성하세요."));
 		return;
 	}
 
@@ -212,7 +210,7 @@ void CMFCGRIDDlg::OnBnClickedAdd()
 void CMFCGRIDDlg::OnBnClickedHoriz()
 {
 	if (m_arr2D_ori.empty()) {
-		AfxMessageBox(_T("배열을 저장하세요."), (MB_OK | MB_ICONEXCLAMATION)); 
+		AfxMessageBox(_T("배열을 저장하세요.")); 
 		return; 
 	}
 
@@ -227,6 +225,8 @@ void CMFCGRIDDlg::OnBnClickedHoriz()
 	}
 
 	m_arr2D_ori = temp;	//임시 배열을 본 배열에 넣기
+
+	InitCropNum();
 	ApplyThresholdLogic(m_sldThreshold.GetPos()); // 현재 슬라이더 값에 맞춰 그리드 갱신
 }
 
@@ -234,7 +234,7 @@ void CMFCGRIDDlg::OnBnClickedHoriz()
 void CMFCGRIDDlg::OnBnClickedVerti()
 {
 	if (m_arr2D_ori.empty()) {
-		AfxMessageBox(_T("배열을 저장하세요."), (MB_OK | MB_ICONEXCLAMATION)); 
+		AfxMessageBox(_T("배열을 저장하세요.")); 
 		return; 
 	}
 
@@ -249,6 +249,8 @@ void CMFCGRIDDlg::OnBnClickedVerti()
 	}
 
 	m_arr2D_ori = temp;	
+
+	InitCropNum();
 	ApplyThresholdLogic(m_sldThreshold.GetPos());
 }
 
@@ -256,7 +258,7 @@ void CMFCGRIDDlg::OnBnClickedVerti()
 void CMFCGRIDDlg::OnBnClickedFlip()
 {
 	if (m_arr2D_ori.empty()) {
-		AfxMessageBox(_T("배열을 저장하세요."), (MB_OK | MB_ICONEXCLAMATION)); 
+		AfxMessageBox(_T("배열을 저장하세요.")); 
 		return; 
 	}
 
@@ -274,6 +276,7 @@ void CMFCGRIDDlg::OnBnClickedFlip()
 	ResizeGrid(W, H); // 가로세로 크기 교체
 	SetDlgItemInt(IDC_HEIGHT, W);
 	SetDlgItemInt(IDC_WIDTH, H); // UI상 숫자 동기화
+	InitCropNum();
 	ApplyThresholdLogic(m_sldThreshold.GetPos());	//데이터와 UI 동기화(화면 갱신)
 }
 
@@ -281,7 +284,7 @@ void CMFCGRIDDlg::OnBnClickedFlip()
 void CMFCGRIDDlg::OnBnClickedFlipCcw()
 {
 	if (m_arr2D_ori.empty()) { 
-		AfxMessageBox(_T("배열을 저장하세요."), (MB_OK | MB_ICONEXCLAMATION)); 
+		AfxMessageBox(_T("배열을 저장하세요.")); 
 		return; 
 	}
 
@@ -300,6 +303,7 @@ void CMFCGRIDDlg::OnBnClickedFlipCcw()
 	ResizeGrid(W, H);
 	SetDlgItemInt(IDC_HEIGHT, W);
 	SetDlgItemInt(IDC_WIDTH, H);
+	InitCropNum();
 	ApplyThresholdLogic(m_sldThreshold.GetPos());
 }
 
@@ -331,18 +335,31 @@ void CMFCGRIDDlg::OnBnClickedSetThre()
 void CMFCGRIDDlg::OnBnClickedCrop()
 {	
 	if (m_arr2D_ori.empty()) {
-		AfxMessageBox(_T("배열을 저장하세요."), (MB_OK | MB_ICONEXCLAMATION));
+		AfxMessageBox(_T("배열을 저장하세요."));
 		return;
 	}
 	m_undoStack.push(m_arr2D_ori);	//스택 저장
 
 	int H_ori = (int)m_arr2D_ori.size();
 	int W_ori = (int)m_arr2D_ori[0].size();
-
-	int x = GetDlgItemInt(IDC_CROP_X);
-	int y = GetDlgItemInt(IDC_CROP_Y);
-	int W = GetDlgItemInt(IDC_CROP_W);
-	int H = GetDlgItemInt(IDC_CROP_H);
+	CCellRange sel=m_ctrlGrid.GetSelectedCellRange();
+	int x, y, W, H;
+	if (sel.IsValid()) {	//셀을 선택한 상황이라면 해당부분을 변수로 두기
+		 x = sel.GetMinCol();
+		 y = sel.GetMinRow();
+		 W = sel.GetMaxCol() - sel.GetMinCol() + 1;
+		 H = sel.GetMaxRow() - sel.GetMinRow() + 1;
+		SetDlgItemInt(IDC_CROP_X, x);
+		SetDlgItemInt(IDC_CROP_Y, y);
+		SetDlgItemInt(IDC_CROP_W, W);
+		SetDlgItemInt(IDC_CROP_H, H);
+	}
+	else {	//아무 셀도 선택하지 않았다면 입력값을 변수로 둔다
+		 x = GetDlgItemInt(IDC_CROP_X);
+		 y = GetDlgItemInt(IDC_CROP_Y);
+		 W = GetDlgItemInt(IDC_CROP_W);
+		 H = GetDlgItemInt(IDC_CROP_H);
+	}
 
 	std::vector<std::vector<int>> temp(H, std::vector<int>(W, 0));
 
@@ -390,7 +407,7 @@ void CMFCGRIDDlg::ResizeGrid(int nRows, int nCols)
 void CMFCGRIDDlg::ApplyThresholdLogic(int nThr)
 {
 	if (m_arr2D_ori.empty()) {
-		AfxMessageBox(_T("배열을 저장하세요."), (MB_OK | MB_ICONEXCLAMATION));
+		AfxMessageBox(_T("배열을 저장하세요."));
 		return;
 	}
 
@@ -433,6 +450,13 @@ void CMFCGRIDDlg::WhiteColor(int row, int col) {
 	m_ctrlGrid.SetItemBkColour(row, col, Black);
 }
 
+void CMFCGRIDDlg::InitCropNum() {
+	SetDlgItemInt(IDC_CROP_X, 0);
+	SetDlgItemInt(IDC_CROP_Y, 0);
+	SetDlgItemInt(IDC_CROP_W, 0);
+	SetDlgItemInt(IDC_CROP_H, 0);
+}
+
 void CMFCGRIDDlg::OnBnClickedRe()
 {
 	if (m_undoStack.empty()) {
@@ -449,5 +473,6 @@ void CMFCGRIDDlg::OnBnClickedRe()
 	ResizeGrid(H, W);
 	SetDlgItemInt(IDC_HEIGHT, H);
 	SetDlgItemInt(IDC_WIDTH, W);
+	InitCropNum();
 	ApplyThresholdLogic(m_sldThreshold.GetPos());
 }

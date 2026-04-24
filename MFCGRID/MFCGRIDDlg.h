@@ -59,6 +59,8 @@ private:
 
 	void WhiteColor(int row, int col);
 
+	void InitCropNum();
+
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnBnClickedSetThre();
 public:

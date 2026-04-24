@@ -25,7 +25,6 @@
 #define IDC_THRESHOLD                   1012
 #define IDC_RESET                       1014
 #define IDC_CROP_X                      1015
-#define IDC_RAND                        1016
 #define IDC_Crop                        1016
 #define IDC_CROP_Y                      1017
 #define IDC_CROP_W                      1018

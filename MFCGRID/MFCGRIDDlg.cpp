@@ -28,10 +28,6 @@ END_MESSAGE_MAP()
 // CMFCGRIDDlg 대화 상자
 CMFCGRIDDlg::CMFCGRIDDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFCGRID_DIALOG, pParent)
-	, ｍ_nCropX(_T(""))
-	, ｍ_nCropY(_T(""))
-	, ｍ_nCropW(_T(""))
-	, ｍ_nCropH(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -45,11 +41,10 @@ void CMFCGRIDDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SLIDER_THRESHOLD, m_sldThreshold);
 	DDX_Text(pDX, IDC_THRESHOLD, m_nThreshold);
 	DDX_Control(pDX, IDC_HEIGHT, m_nHeight);
-	DDX_Text(pDX, IDC_CROP_X, ｍ_nCropX);
-	//  DDX_Control(pDX, IDC_CROP_Y, ｍ_nCropY);
-	DDX_Text(pDX, IDC_CROP_Y, ｍ_nCropY);
-	DDX_Text(pDX, IDC_CROP_W, ｍ_nCropW);
-	DDX_Text(pDX, IDC_CROP_H, ｍ_nCropH);
+	DDX_Control(pDX, IDC_CROP_W, m_nCropW);
+	DDX_Control(pDX, IDC_CROP_H, m_nCropH);
+	DDX_Control(pDX, IDC_CROP_X, m_nCropX);
+	DDX_Control(pDX, IDC_CROP_Y, m_nCropY);
 }
 
 BEGIN_MESSAGE_MAP(CMFCGRIDDlg, CDialogEx)
@@ -65,6 +60,7 @@ BEGIN_MESSAGE_MAP(CMFCGRIDDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_FLIP, &CMFCGRIDDlg::OnBnClickedFlip)
 	ON_BN_CLICKED(IDC_FLIPCCW, &CMFCGRIDDlg::OnBnClickedFlipCcw)
 	ON_BN_CLICKED(IDC_SETTHRE, &CMFCGRIDDlg::OnBnClickedSetThre)
+	ON_BN_CLICKED(IDC_Crop, &CMFCGRIDDlg::OnBnClickedCrop)
 END_MESSAGE_MAP()
 
 // CMFCGRIDDlg 메시지 처리기
@@ -320,9 +316,32 @@ void CMFCGRIDDlg::OnBnClickedSetThre()
 	ApplyThresholdLogic(nThrSet);
 }
 
+void CMFCGRIDDlg::OnBnClickedCrop()
+{
+	int x = GetDlgItemInt(IDC_CROP_X);	//해당 에디트 박스에 적힌 int 가져오기
+	int y = GetDlgItemInt(IDC_CROP_Y);
+	int W = GetDlgItemInt(IDC_CROP_W);
+	int H = GetDlgItemInt(IDC_CROP_H);
+	//기존 그리드에서 크롭하려는 부분이 벗어날 때 if 작성해야함
+	std::vector<std::vector<int>> temp(H, std::vector<int>(W, 0));
+
+	for (int row = y; row < y + H; row++) {
+		for (int col = x; col < x + W; col++) {
+			temp[row-y][col-x] = m_arr2D_ori[row][col];
+		}
+	}
+	m_arr2D_ori = temp;
+	ResizeGrid(H, W);
+	SetDlgItemInt(IDC_HEIGHT, H);
+	SetDlgItemInt(IDC_WIDTH, W);
+	ApplyThresholdLogic(m_sldThreshold.GetPos());
+}
+
 // ======그리드 UI 크기 동기화======
 void CMFCGRIDDlg::ResizeGrid(int nRows, int nCols)
 {
+	m_ctrlGrid.DeleteAllItems();	//해줘야 크롭시 에러가 발생하지 않음
+
 	int GW = nCols * 45 + 4;
 	int GH = nRows * 45 + 4;
 	m_ctrlGrid.MoveWindow(452 - GW / 2, 452 - GH / 2, GW, GH);	//생성 그리드를 그리드 View 중앙에 배치
@@ -379,3 +398,4 @@ void CMFCGRIDDlg::WhiteColor(int row, int col) {
 	COLORREF Black = RGB(255, 255, 255);
 	m_ctrlGrid.SetItemBkColour(row, col, Black);
 }
+

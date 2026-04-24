@@ -71,4 +71,5 @@ public:
 	CEdit m_nCropX;
 	CEdit m_nCropY;
 	afx_msg void OnBnClickedRe();
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 };

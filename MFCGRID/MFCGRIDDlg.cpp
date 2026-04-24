@@ -62,6 +62,7 @@ BEGIN_MESSAGE_MAP(CMFCGRIDDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_SETTHRE, &CMFCGRIDDlg::OnBnClickedSetThre)
 	ON_BN_CLICKED(IDC_Crop, &CMFCGRIDDlg::OnBnClickedCrop)
 	ON_BN_CLICKED(IDC_Re, &CMFCGRIDDlg::OnBnClickedRe)
+	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 // CMFCGRIDDlg 메시지 처리기
@@ -475,4 +476,14 @@ void CMFCGRIDDlg::OnBnClickedRe()
 	SetDlgItemInt(IDC_WIDTH, W);
 	InitCropNum();
 	ApplyThresholdLogic(m_sldThreshold.GetPos());
+}
+
+void CMFCGRIDDlg::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	m_ctrlGrid.SetSelectedRange(-1, -1, -1, -1);
+	m_ctrlGrid.Invalidate();
+	InitCropNum();
+
+
+	CDialogEx::OnLButtonDown(nFlags, point);
 }

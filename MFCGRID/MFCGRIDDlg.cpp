@@ -185,6 +185,11 @@ void CMFCGRIDDlg::OnBnClickedAdd()
 	int nInputHeight = m_ctrlGrid.GetRowCount();
 	int nInputWidth = m_ctrlGrid.GetColumnCount();
 
+	if (nInputHeight == 0 || nInputWidth == 0) {
+		AfxMessageBox(_T("먼저 그리드를 생성하세요."), (MB_OK | MB_ICONEXCLAMATION));
+		return;
+	}
+
 	m_arr2D_ori.assign(nInputHeight, std::vector<int>(nInputWidth, 0));
 	for (int row = 0; row < nInputHeight; row++) {
 		for (int col = 0; col < nInputWidth; col++) {
@@ -194,7 +199,6 @@ void CMFCGRIDDlg::OnBnClickedAdd()
 	}
 	m_arr2D_view = m_arr2D_ori; // 초기 배열 동기화
 	AfxMessageBox(_T("데이터가 저장되었습니다."),(MB_OK|MB_ICONINFORMATION));
-	m_ctrlGrid.Invalidate();	//그리드 화면 새로 고침 필수
 	ApplyThresholdLogic(m_sldThreshold.GetPos()); // 현재 슬라이더 값에 맞춰 그리드 갱신
 }
 
@@ -316,20 +320,39 @@ void CMFCGRIDDlg::OnBnClickedSetThre()
 	ApplyThresholdLogic(nThrSet);
 }
 
+// ======Crop 버튼 선택시======
 void CMFCGRIDDlg::OnBnClickedCrop()
-{
-	int x = GetDlgItemInt(IDC_CROP_X);	//해당 에디트 박스에 적힌 int 가져오기
+{	
+	if (m_arr2D_ori.empty()) {
+		AfxMessageBox(_T("배열을 저장하세요."), (MB_OK | MB_ICONEXCLAMATION));
+		return;
+	}
+
+	int H_ori = (int)m_arr2D_ori.size();
+	int W_ori = (int)m_arr2D_ori[0].size();
+
+	int x = GetDlgItemInt(IDC_CROP_X);
 	int y = GetDlgItemInt(IDC_CROP_Y);
 	int W = GetDlgItemInt(IDC_CROP_W);
 	int H = GetDlgItemInt(IDC_CROP_H);
-	//기존 그리드에서 크롭하려는 부분이 벗어날 때 if 작성해야함
+
 	std::vector<std::vector<int>> temp(H, std::vector<int>(W, 0));
+
+	if (W == 0 || H == 0) {
+		AfxMessageBox(_T("W, H 값은 0 이상이여야 합니다."));
+		return;
+	}
+	if ((x+W)> W_ori||(y+H)> H_ori) {	//기존 그리드에서 크롭하려는 부분이 벗어날 때
+		AfxMessageBox(_T("그리드를 벗어납니다. 다시 한번 확인하세요."));
+		return;
+	}
 
 	for (int row = y; row < y + H; row++) {
 		for (int col = x; col < x + W; col++) {
 			temp[row-y][col-x] = m_arr2D_ori[row][col];
 		}
 	}
+
 	m_arr2D_ori = temp;
 	ResizeGrid(H, W);
 	SetDlgItemInt(IDC_HEIGHT, H);
@@ -358,7 +381,10 @@ void CMFCGRIDDlg::ResizeGrid(int nRows, int nCols)
 // ======임계값 처리 및 화면 갱신======
 void CMFCGRIDDlg::ApplyThresholdLogic(int nThr)
 {
-	if (m_arr2D_ori.empty()) return;
+	if (m_arr2D_ori.empty()) {
+		AfxMessageBox(_T("배열을 저장하세요."), (MB_OK | MB_ICONEXCLAMATION));
+		return;
+	}
 
 	int H = (int)m_arr2D_ori.size();
 	int W = (int)m_arr2D_ori[0].size();

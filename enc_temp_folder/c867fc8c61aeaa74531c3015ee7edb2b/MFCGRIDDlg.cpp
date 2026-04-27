@@ -386,7 +386,7 @@ void CMFCGRIDDlg::OnBnClickedCrop()
 	ApplyThresholdLogic(m_sldThreshold.GetPos());
 }
 
-//======Undo 버튼 클릭할 때======
+//======Re 버튼 클릭할 때======
 void CMFCGRIDDlg::OnBnClickedUndo()
 {
 	if (m_undoStack.empty()) {
